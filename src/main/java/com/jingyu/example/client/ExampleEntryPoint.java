@@ -6,9 +6,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class ExampleEntryPoint implements EntryPoint {
 
-	@Override
-	public void onModuleLoad() {
-		RootPanel.get().add(new Label("Hello GWT World!"));
-	}
+    @Override
+    public void onModuleLoad() {
+        RootPanel.get().add(new Label("Hello GWT World!"));
+    }
 
 }

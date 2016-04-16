@@ -1,18 +1,18 @@
 // This block specifies the dependencies need to run rest of the script
 buildscript {
-	repositories {
-		jcenter()
-		mavenCentral()
-	}
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
 
-	dependencies {
-		classpath "com.google.appengine:gradle-appengine-plugin:1.9.34"
-		classpath "de.richsource.gradle.plugins:gwt-gradle-plugin:0.6"
-	}
+    dependencies {
+        classpath "com.google.appengine:gradle-appengine-plugin:1.9.34"
+        classpath "de.richsource.gradle.plugins:gwt-gradle-plugin:0.6"
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 apply plugin: "java"
@@ -26,21 +26,36 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
-	appengineSdk "com.google.appengine:appengine-java-sdk:1.9.34"
+    // By default, GWT and App Engine dependencies are managed by the
+    // plugins during compile and run time. The up side is that we
+    // do not have to manually set dependencies in this section. The
+    // down side is that the dependencies will not be exposed when
+    // creating the Eclipse project files using `gradlew eclipse`.
+
+    // Some of the core dependencies injected by the plugins. Uncomment
+    // these if you want to manage dependencies manually.
+    // compile "com.google.gwt:gwt-user:2.7.0"
+    // compile "com.google.gwt:gwt-dev:2.7.0"
+    // compile "com.google.appengine:appengine-api-1.0-sdk:1.9.34"
+
+    // Specifies the App Engine SDK to download and use
+    appengineSdk "com.google.appengine:appengine-java-sdk:1.9.34"
 }
 
 gwt {
-	gwtVersion = "2.7.0"
+    // Specifying a version number allows GWT plugin to inject the proper
+    // dependencies during build.
+    gwtVersion = "2.7.0"
 
-	// This points to src/main/java/com/jingyu/example/Example.gwt.xml
-	modules "com.jingyu.example.Example"
+    // This points to src/main/java/com/jingyu/example/Example.gwt.xml
+    modules "com.jingyu.example.Example"
 }
 
 appengine {
-	// We will let Gradle download and manage the App Engine SDK for us
-	downloadSdk = true
+    // We will let Gradle download and manage the App Engine SDK for us
+    downloadSdk = true
 
-	appcfg {
-		oauth2 = true
-	}
+    appcfg {
+        oauth2 = true
+    }
 }

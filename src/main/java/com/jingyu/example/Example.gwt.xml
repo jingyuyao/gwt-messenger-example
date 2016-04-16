@@ -2,8 +2,8 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.7.0/distro-source/core/src/gwt-module.dtd">
 <!-- Module name affects the location of generated js files. -->
 <module rename-to="example">
-	<inherits name="com.google.gwt.user.User" />
-	<entry-point class="com.jingyu.example.client.ExampleEntryPoint" />
+    <inherits name="com.google.gwt.user.User" />
+    <entry-point class="com.jingyu.example.client.ExampleEntryPoint" />
     <!-- Specify the paths for translatable code -->
     <source path="client" />
 </module>

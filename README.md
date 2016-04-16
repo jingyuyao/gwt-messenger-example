@@ -8,8 +8,8 @@
 
 ### Development mode
 
-	>>>gradlew appengineRun
-	>>>gradlew gwtSuperDev
+    >>>gradlew appengineRun
+    >>>gradlew gwtSuperDev
 
 These commands boots up two local servers:
 
@@ -25,13 +25,13 @@ You can avoid the modal by bookmarking the `Compile` button for one-click compil
 
 ### Deploy
 
-	>>>gradlew appengineUpdate
+    >>>gradlew appengineUpdate
 
 This uploads the app to App Engine. It will override the version (defined in `appengine-web.xml`) on App Engine if it exists or else it will create that version.
 
 If the uploaded app has a new version, run:
 
-	>>>gradlew appengineSetDefaultVersion
+    >>>gradlew appengineSetDefaultVersion
 
 to tell App Engine to start serving the new version on production.
 
