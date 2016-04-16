@@ -2,17 +2,7 @@
 
 ## Dependencies
 
-### Build (use latest version for all)
-
-- Java 8
-- Gradle
-- gwt-gradle-plugin by steffenschaefer
-- gradle-appengine-plugin by Google
-
-### SDKs (managed by Gradle)
-
-- Google App Engine 1.0
-- GWT 2.7.0
+- JDK 8 with JAVA_HOME set
 
 ## How to...
 
