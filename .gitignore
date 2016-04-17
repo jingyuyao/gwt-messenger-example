@@ -1,3 +1,4 @@
+# Contains Gradle settings
 .gradle/
 
 # This contains all the build files produced by GWT and App Engine
