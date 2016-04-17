@@ -3,8 +3,9 @@
 # This contains all the build files produced by GWT and App Engine
 build/
 
-# This is the war output directory used by Eclipse and `gradlew build`
+# These are the output directory used by Eclipse and `gradlew build`
 war/
+bin/
 
 # Eclipse stuff, these can be generated using `gradlew eclipse`
 .settings/

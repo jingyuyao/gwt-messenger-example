@@ -10,5 +10,4 @@ public class ExampleEntryPoint implements EntryPoint {
     public void onModuleLoad() {
         RootPanel.get().add(new Label("Hello GWT World!"));
     }
-
 }
