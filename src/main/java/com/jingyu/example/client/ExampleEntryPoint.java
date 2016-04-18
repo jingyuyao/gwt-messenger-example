@@ -26,11 +26,10 @@ public class ExampleEntryPoint implements EntryPoint {
     private final TextBox messageBox = new TextBox();
     private final Button sendButton = new Button("Send");
     private final FlexTable messageTable = new FlexTable();
+    private final RootPanel rootPanel = RootPanel.get();
 
     @Override
     public void onModuleLoad() {
-        final RootPanel rootPanel = RootPanel.get();
-
         SendMessageHandler handler = new SendMessageHandler();
         messageBox.addKeyUpHandler(handler);
         sendButton.addClickHandler(handler);
@@ -41,7 +40,6 @@ public class ExampleEntryPoint implements EntryPoint {
         rootPanel.add(sendButton);
 
         messageService.listMessages(new AsyncCallback<List<String>>() {
-
             @Override
             public void onFailure(Throwable caught) {
                 Window.alert("Woops... Can't retrieve latest messages.");
@@ -67,7 +65,7 @@ public class ExampleEntryPoint implements EntryPoint {
                 @Override
                 public void onFailure(Throwable caught) {
                     // Humm... GWT doesn't support String.format()
-                    Window.alert("Oh no! Message did not send successfully. Error: %s" + caught.getMessage());
+                    Window.alert("Oh no! Message did not send successfully. Error: " + caught.getMessage());
                     sendButton.setEnabled(true);
                 }
 

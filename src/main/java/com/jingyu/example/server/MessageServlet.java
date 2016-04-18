@@ -38,7 +38,7 @@ public class MessageServlet extends RemoteServiceServlet implements MessageServi
         List<String> messages = new ArrayList<String>(LIST_MESSAGES_LIMIT);
         PreparedQuery pq = datastore.prepare(listMessages);
 
-        for (Entity entity : pq.asList(FetchOptions.Builder.withLimit(10))) {
+        for (Entity entity : pq.asList(FetchOptions.Builder.withLimit(LIST_MESSAGES_LIMIT))) {
             messages.add((String) entity.getProperty("message"));
         }
 
