@@ -20,7 +20,7 @@ public class MessageServlet extends RemoteServiceServlet implements MessageServi
     private static final int LIST_MESSAGES_LIMIT = 10;
 
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    private static Query listMessages = new Query(MessageBuilder.KIND)
+    private static Query listMessages = new Query(MESSAGE_KIND)
             .addSort("created", Query.SortDirection.DESCENDING)
             .addProjection(new PropertyProjection("message", String.class));
 
