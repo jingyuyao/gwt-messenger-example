@@ -1,6 +1,7 @@
 package com.jingyu.example.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -15,16 +16,20 @@ import com.jingyu.example.client.MessageService;
 
 @SuppressWarnings("serial")
 public class MessageServlet extends RemoteServiceServlet implements MessageService {
+    public static final String MESSAGE_KIND = "Message";
+    private static final int LIST_MESSAGES_LIMIT = 10;
+
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private static Query listMessages = new Query(MessageBuilder.KIND)
             .addSort("created", Query.SortDirection.DESCENDING)
             .addProjection(new PropertyProjection("message", String.class));
-    private static int LIST_MESSAGES_LIMIT = 10;
 
     @Override
     public void addMessage(String message) throws RuntimeException {
-        MessageBuilder builder = new MessageBuilder();
-        Entity newMessage = builder.message(message).create();
+        Entity newMessage = new Entity(MESSAGE_KIND);
+        newMessage.setProperty("created", new Date());
+        newMessage.setProperty("message", message);
+
         datastore.put(newMessage);
     }
 
