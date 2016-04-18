@@ -31,7 +31,11 @@ dependencies {
     // Specifies the App Engine SDK to download and use.
     appengineSdk "com.google.appengine:appengine-java-sdk:1.9.34"
 
-    // GWT dependencies are managed by the plugin.
+    // Dependencies for development. `providedCompile` dependencies
+    // are not included in the output build. These are only included
+    // so Eclipse can properly resolve classpaths.
+    providedCompile "com.google.gwt:gwt-user:2.7.0"
+    providedCompile "com.google.gwt:gwt-dev:2.7.0"
 }
 
 gwt {
