@@ -6,5 +6,6 @@
     <entry-point class="com.jingyu.example.client.ExampleEntryPoint" />
     <!-- Specify the paths for translatable code -->
     <source path="client" />
-    <source path="shared" />
+    <!-- Add this when there are shared classes -->
+    <!-- <source path="shared" /> -->
 </module>

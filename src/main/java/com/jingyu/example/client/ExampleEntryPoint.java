@@ -1,5 +1,7 @@
 package com.jingyu.example.client;
 
+import java.util.List;
+
 /*
  * Remember not to use any App Engine imports! They cannot be compiled to Javascript
  */
@@ -19,68 +21,87 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class ExampleEntryPoint implements EntryPoint {
-	private final MessageServiceAsync messageService = GWT.create(MessageService.class);
+    private final MessageServiceAsync messageService = GWT.create(MessageService.class);
 
-	private final TextBox messageBox = new TextBox();
-	private final Button sendButton = new Button("Send");
-	private final FlexTable messageTable = new FlexTable();
+    private final TextBox messageBox = new TextBox();
+    private final Button sendButton = new Button("Send");
+    private final FlexTable messageTable = new FlexTable();
 
-	@Override
-	public void onModuleLoad() {
-		final RootPanel rootPanel = RootPanel.get();
+    @Override
+    public void onModuleLoad() {
+        final RootPanel rootPanel = RootPanel.get();
 
-		SendMessageHandler handler = new SendMessageHandler();
-		messageBox.addKeyUpHandler(handler);
-		sendButton.addClickHandler(handler);
+        SendMessageHandler handler = new SendMessageHandler();
+        messageBox.addKeyUpHandler(handler);
+        sendButton.addClickHandler(handler);
 
-		rootPanel.add(new Label("Welcome to a simple messenger!"));
-		rootPanel.add(messageBox);
-		rootPanel.add(sendButton);
-		rootPanel.add(messageTable);
-	}
+        rootPanel.add(new Label("Welcome to a simple messenger!"));
+        rootPanel.add(messageTable);
+        rootPanel.add(messageBox);
+        rootPanel.add(sendButton);
 
-	private void sendMessage() {
-		// final so it could be used inside the callback
-		final String message = messageBox.getValue();
+        messageService.listMessages(new AsyncCallback<List<String>>() {
 
-		if (message != "") {
-			sendButton.setEnabled(false);
-			messageService.addMessage(message, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert("Woops... Can't retrieve latest messages.");
+            }
 
-				@Override
-				public void onFailure(Throwable caught) {
-					// Humm... GWT doesn't support String.format()
-					Window.alert("Oh no! Message did not send successfully. Error: %s" + caught.getMessage());
-					sendButton.setEnabled(true);
-				}
+            @Override
+            public void onSuccess(List<String> result) {
+                for (int i = result.size() - 1; i >= 0; i--) {
+                    addMessage(result.get(i));
+                }
+            }
+        });
+    }
 
-				@Override
-				public void onSuccess(Void result) {
-					messageBox.setValue("");
-					messageTable.setText(messageTable.getRowCount(), 0, message);
-					sendButton.setEnabled(true);
-				}
+    private void sendMessage() {
+        // final so it could be used inside the callback
+        final String message = messageBox.getValue();
 
-			});
-		}
-	}
+        if (message != "") {
+            sendButton.setEnabled(false);
+            messageService.addMessage(message, new AsyncCallback<Void>() {
 
-	// Create a handler for the sendButton and nameField
-	class SendMessageHandler implements ClickHandler, KeyUpHandler {
-		/**
-		 * Fired when the user clicks on the sendButton.
-		 */
-		public void onClick(ClickEvent event) {
-			sendMessage();
-		}
+                @Override
+                public void onFailure(Throwable caught) {
+                    // Humm... GWT doesn't support String.format()
+                    Window.alert("Oh no! Message did not send successfully. Error: %s" + caught.getMessage());
+                    sendButton.setEnabled(true);
+                }
 
-		/**
-		 * Fired when the user types in the messageBox.
-		 */
-		public void onKeyUp(KeyUpEvent event) {
-			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-				sendMessage();
-			}
-		}
-	}
+                @Override
+                public void onSuccess(Void result) {
+                    messageBox.setValue("");
+                    addMessage(message);
+                    sendButton.setEnabled(true);
+                }
+
+            });
+        }
+    }
+
+    private void addMessage(String message) {
+        messageTable.setText(messageTable.getRowCount(), 0, message);
+    }
+
+    // Create a handler for the sendButton and nameField
+    class SendMessageHandler implements ClickHandler, KeyUpHandler {
+        /**
+         * Fired when the user clicks on the sendButton.
+         */
+        public void onClick(ClickEvent event) {
+            sendMessage();
+        }
+
+        /**
+         * Fired when the user types in the messageBox.
+         */
+        public void onKeyUp(KeyUpEvent event) {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                sendMessage();
+            }
+        }
+    }
 }
