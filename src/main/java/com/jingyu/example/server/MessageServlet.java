@@ -13,11 +13,11 @@ import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.jingyu.example.client.MessageService;
+import com.jingyu.example.shared.Constants;
 
 @SuppressWarnings("serial")
 public class MessageServlet extends RemoteServiceServlet implements MessageService {
     public static final String MESSAGE_KIND = "Message";
-    private static final int LIST_MESSAGES_LIMIT = 10;
 
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private static Query listMessages = new Query(MESSAGE_KIND)
@@ -35,10 +35,10 @@ public class MessageServlet extends RemoteServiceServlet implements MessageServi
 
     @Override
     public List<String> listMessages() throws RuntimeException {
-        List<String> messages = new ArrayList<String>(LIST_MESSAGES_LIMIT);
+        List<String> messages = new ArrayList<String>(Constants.MESSAGE_LIST_LIMIT);
         PreparedQuery pq = datastore.prepare(listMessages);
 
-        for (Entity entity : pq.asList(FetchOptions.Builder.withLimit(LIST_MESSAGES_LIMIT))) {
+        for (Entity entity : pq.asList(FetchOptions.Builder.withLimit(Constants.MESSAGE_LIST_LIMIT))) {
             messages.add((String) entity.getProperty("message"));
         }
 

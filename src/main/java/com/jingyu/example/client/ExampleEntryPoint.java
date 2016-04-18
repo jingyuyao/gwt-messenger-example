@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.jingyu.example.shared.Constants;
 
 public class ExampleEntryPoint implements EntryPoint {
     private final MessageServiceAsync messageService = GWT.create(MessageService.class);
@@ -39,6 +40,10 @@ public class ExampleEntryPoint implements EntryPoint {
         rootPanel.add(messageBox);
         rootPanel.add(sendButton);
 
+        refreshMessages();
+    }
+
+    private void refreshMessages(){
         messageService.listMessages(new AsyncCallback<List<String>>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -80,7 +85,15 @@ public class ExampleEntryPoint implements EntryPoint {
         }
     }
 
+    /**
+     * Adds a message to the table. Removes oldest message if table size
+     * exceeds {@link Constants.MESSAGE_LIST_LIMIT}.
+     * @param message
+     */
     private void addMessage(String message) {
+        if (messageTable.getRowCount() >= Constants.MESSAGE_LIST_LIMIT){
+            messageTable.removeRow(0);
+        }
         messageTable.setText(messageTable.getRowCount(), 0, message);
     }
 
