@@ -7,7 +7,7 @@ import com.google.appengine.api.datastore.Key;
 
 /**
  * Subclasses can create builders by providing methods like this:
- * 
+ *
  * <pre>
  * <code>
  * public IEntityBuilder propertyName(String value){
@@ -15,7 +15,7 @@ import com.google.appengine.api.datastore.Key;
  * }
  * </code>
  * </pre>
- * 
+ *
  * @author Jingyu
  *
  */

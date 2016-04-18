@@ -5,7 +5,7 @@ import com.google.appengine.api.users.User;
 
 /**
  * Consider using a library like Objectify for better ORM support.
- * 
+ *
  * @author Jingyu
  *
  */

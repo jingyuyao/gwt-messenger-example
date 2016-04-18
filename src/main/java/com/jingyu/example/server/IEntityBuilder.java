@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Entity;
 
 /**
  * An interface to build App Engine Entities using the builder pattern.
- * 
+ *
  * @author Jingyu
  *
  */
