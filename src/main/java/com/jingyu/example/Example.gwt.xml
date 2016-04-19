@@ -3,6 +3,7 @@
 <!-- Module name affects the location of generated Javascript files and RPC routing paths. -->
 <module rename-to="example">
     <inherits name="com.google.gwt.user.User" />
+    <inherits name="com.google.gwt.logging.Logging"/>
 
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->

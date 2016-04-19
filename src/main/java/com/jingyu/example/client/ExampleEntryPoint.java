@@ -2,6 +2,8 @@ package com.jingyu.example.client;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Remember not to use any App Engine imports! They cannot be compiled to Javascript
@@ -31,6 +33,7 @@ public class ExampleEntryPoint implements EntryPoint {
     private final Button sendButton = new Button("Send");
     private final FlexTable messageTable = new FlexTable();
     private final RootPanel rootPanel = RootPanel.get();
+    private final Logger logger = Logger.getLogger("ExampleEntryPoint");
     private Timer refreshMessageTimer;
     private Date lastRefreshed;
 
@@ -45,22 +48,21 @@ public class ExampleEntryPoint implements EntryPoint {
         rootPanel.add(messageBox);
         rootPanel.add(sendButton);
 
-        refreshMessages(lastRefreshed);
-
         refreshMessageTimer = new Timer(){
             public void run(){
                 refreshMessages(lastRefreshed);
             }
         };
-
-        refreshMessageTimer.scheduleRepeating(REFRESH_RATE);
+        
+        refreshMessages(lastRefreshed);
     }
 
     private void refreshMessages(Date since){
         messageService.listMessages(since, new AsyncCallback<List<String>>() {
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("Woops... Can't retrieve latest messages. Error: " + caught.getMessage());
+                logger.log(Level.WARNING, "Woops... Can't retrieve latest messages. Error: " + caught.getMessage());
+                refreshMessageTimer.schedule(REFRESH_RATE);
             }
 
             @Override
@@ -74,6 +76,7 @@ public class ExampleEntryPoint implements EntryPoint {
                 for (int i = messages.size() - 1; i >= 0; i--) {
                     addMessage(messages.get(i));
                 }
+                refreshMessageTimer.schedule(REFRESH_RATE);
             }
         });
     }
@@ -93,7 +96,7 @@ public class ExampleEntryPoint implements EntryPoint {
                 @Override
                 public void onFailure(Throwable caught) {
                     // Humm... GWT doesn't support String.format()
-                    Window.alert("Oh no! Message did not send successfully. Error: " + caught.getMessage());
+                    logger.log(Level.WARNING, "Oh no! Message did not send successfully. Error: " + caught.getMessage());
                     sendButton.setEnabled(true);
                 }
 
