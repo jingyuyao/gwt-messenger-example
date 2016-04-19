@@ -1,5 +1,6 @@
 package com.jingyu.example.client;
 
+import java.util.Date;
 import java.util.List;
 
 /*
@@ -12,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -23,11 +25,14 @@ import com.jingyu.example.shared.Constants;
 
 public class ExampleEntryPoint implements EntryPoint {
     private final MessageServiceAsync messageService = GWT.create(MessageService.class);
+    private final int REFRESH_RATE = 2000;
 
     private final TextBox messageBox = new TextBox();
     private final Button sendButton = new Button("Send");
     private final FlexTable messageTable = new FlexTable();
     private final RootPanel rootPanel = RootPanel.get();
+    private Timer refreshMessageTimer;
+    private Date lastRefreshed;
 
     @Override
     public void onModuleLoad() {
@@ -40,11 +45,19 @@ public class ExampleEntryPoint implements EntryPoint {
         rootPanel.add(messageBox);
         rootPanel.add(sendButton);
 
-        refreshMessages();
+        refreshMessages(lastRefreshed);
+
+        refreshMessageTimer = new Timer(){
+            public void run(){
+                refreshMessages(lastRefreshed);
+            }
+        };
+
+        refreshMessageTimer.scheduleRepeating(REFRESH_RATE);
     }
 
-    private void refreshMessages(){
-        messageService.listMessages(new AsyncCallback<List<String>>() {
+    private void refreshMessages(Date since){
+        messageService.listMessages(since, new AsyncCallback<List<String>>() {
             @Override
             public void onFailure(Throwable caught) {
                 Window.alert("Woops... Can't retrieve latest messages. Error: " + caught.getMessage());
@@ -52,6 +65,10 @@ public class ExampleEntryPoint implements EntryPoint {
 
             @Override
             public void onSuccess(List<String> messages) {
+                if (!messages.isEmpty()){
+                    lastRefreshed = new Date();
+                }
+                
                 // Returned messages are sorted by created descending and we
                 // want to display the latest message on the bottom.
                 for (int i = messages.size() - 1; i >= 0; i--) {
@@ -83,7 +100,6 @@ public class ExampleEntryPoint implements EntryPoint {
                 @Override
                 public void onSuccess(Void result) {
                     messageBox.setValue("");
-                    addMessage(message);
                     sendButton.setEnabled(true);
                 }
 
