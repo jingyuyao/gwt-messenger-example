@@ -1,12 +1,17 @@
 // This block specifies the dependencies needed to run rest of the script.
 buildscript {
+    ext {
+        gaeVer = '1.9.34'
+        gwtVer = '2.7.0'
+    }
+
     repositories {
         jcenter()
         mavenCentral()
     }
 
     dependencies {
-        classpath "com.google.appengine:gradle-appengine-plugin:1.9.34"
+        classpath "com.google.appengine:gradle-appengine-plugin:$gaeVer"
         classpath "de.richsource.gradle.plugins:gwt-gradle-plugin:0.6"
     }
 }
@@ -26,22 +31,22 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     // Include App Engine as a dependency.
-    compile "com.google.appengine:appengine-api-1.0-sdk:1.9.34"
+    compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVer"
 
     // Specifies the App Engine SDK to download and use.
-    appengineSdk "com.google.appengine:appengine-java-sdk:1.9.34"
+    appengineSdk "com.google.appengine:appengine-java-sdk:$gaeVer"
 
     // Dependencies for development. `providedCompile` dependencies
     // are not included in the output build. These are only included
     // so Eclipse can properly resolve classpaths.
-    providedCompile "com.google.gwt:gwt-user:2.7.0"
-    providedCompile "com.google.gwt:gwt-dev:2.7.0"
+    providedCompile "com.google.gwt:gwt-user:$gwtVer"
+    providedCompile "com.google.gwt:gwt-dev:$gwtVer"
 }
 
 gwt {
     // Specifying a version number allows GWT plugin to inject the proper
     // dependencies during build.
-    gwtVersion = "2.7.0"
+    gwtVersion = gwtVer
 
     // This points to src/main/java/com/jingyu/example/Example.gwt.xml
     modules "com.jingyu.example.Example"

@@ -1,5 +1,7 @@
 # Example Gradle + GWT + Google App Engine project
 
+A sample build of this project can be found at: https://fair-myth-128602.appspot.com/
+
 ## Dependencies
 
 - JDK 8 with JAVA_HOME set

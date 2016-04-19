@@ -47,18 +47,24 @@ public class ExampleEntryPoint implements EntryPoint {
         messageService.listMessages(new AsyncCallback<List<String>>() {
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("Woops... Can't retrieve latest messages.");
+                Window.alert("Woops... Can't retrieve latest messages. Error: " + caught.getMessage());
             }
 
             @Override
-            public void onSuccess(List<String> result) {
-                for (int i = result.size() - 1; i >= 0; i--) {
-                    addMessage(result.get(i));
+            public void onSuccess(List<String> messages) {
+                // Returned messages are sorted by created descending and we
+                // want to display the latest message on the bottom.
+                for (int i = messages.size() - 1; i >= 0; i--) {
+                    addMessage(messages.get(i));
                 }
             }
         });
     }
 
+    /**
+     * Sends the text in {@link #messageBox messageBox} to the server and
+     * add it to the bottom of {@link #messageTable messageTable} if successful.
+     */
     private void sendMessage() {
         // final so it could be used inside the callback
         final String message = messageBox.getValue();
@@ -87,7 +93,7 @@ public class ExampleEntryPoint implements EntryPoint {
 
     /**
      * Adds a message to the table. Removes oldest message if table size
-     * exceeds {@link Constants.MESSAGE_LIST_LIMIT}.
+     * exceeds {@link Constants#MESSAGE_LIST_LIMIT MESSAGE_LIST_LIMIT}.
      * @param message
      */
     private void addMessage(String message) {
