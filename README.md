@@ -54,6 +54,8 @@ source maps used by GWT.
 
 ### Deploy
 
+Stop your local App Engine server then:
+
     >>>gradlew appengineUpdate
 
 This uploads the app to App Engine. It will override the version (defined in `appengine-web.xml`) on App Engine if it exists or else it will create that version.

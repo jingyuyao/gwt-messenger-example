@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.jingyu.example.shared.Message;
 
 @RemoteServiceRelativePath("message")
 public interface MessageService extends RemoteService {
-    void addMessage(String message) throws RuntimeException;
+    void addMessage(String content) throws RuntimeException;
 
-    List<String> listMessages(Date since) throws RuntimeException;
+    List<Message> listMessages(Date since) throws RuntimeException;
 }

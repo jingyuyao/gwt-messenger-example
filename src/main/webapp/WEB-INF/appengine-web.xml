@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+  <!-- This is the demo application ID. Replace this with your own. -->
   <application>fair-myth-128602</application>
   <version>1</version>
 

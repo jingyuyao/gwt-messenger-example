@@ -4,6 +4,6 @@
   <!-- Used by MessageServlet.listMessages -->
   <datastore-index kind="Message" ancestor="false">
       <property name="created" direction="desc"/>
-      <property name="message" direction="asc"/>
+      <property name="content" direction="asc"/>
   </datastore-index>
 </datastore-indexes>
