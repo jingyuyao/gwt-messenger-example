@@ -12,3 +12,6 @@ bin/
 .settings/
 .project
 .classpath
+
+# Intellij Idea stuff
+.idea/
