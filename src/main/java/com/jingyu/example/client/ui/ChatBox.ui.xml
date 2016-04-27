@@ -4,13 +4,13 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <g:HTMLPanel>
         <header>
-            <m:MaterialNavBar paddingLeft="20" backgroundColor="blue">
+            <m:MaterialNavBar backgroundColor="blue">
                 <m:MaterialNavBrand ui:field="title"/>
             </m:MaterialNavBar>
         </header>
         <m:MaterialContainer>
             <m:MaterialRow>
-                <m:MaterialColumn grid="s6" offset="s3">
+                <m:MaterialColumn grid="s12 m10 l8" offset="m1 l2">
                     <g:ScrollPanel ui:field="scrollPanel">
                         <m:MaterialCollection ui:field="messages"/>
                     </g:ScrollPanel>

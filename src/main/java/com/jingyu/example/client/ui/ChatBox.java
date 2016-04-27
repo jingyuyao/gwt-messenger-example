@@ -114,7 +114,7 @@ public class ChatBox extends Composite implements RequiresResize {
     @Override
     public void onResize() {
         int totalHeight = Window.getClientHeight();
-        scrollPanel.setHeight(String.valueOf(totalHeight * 0.7) + "px");
+        scrollPanel.setHeight(String.valueOf(totalHeight * 0.8) + "px");
     }
 
     private class SendMessageCallback implements AsyncCallback<Void> {
