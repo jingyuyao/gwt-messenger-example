@@ -34,6 +34,7 @@ public class ChatBox extends Composite implements RequiresResize {
     private Timer refreshMessageTimer;
     private boolean inputLocked = false;
     private Date lastRefreshed;
+    private int retryMultiplier = 2;
 
     @UiField
     MaterialNavBrand title;
@@ -134,7 +135,8 @@ public class ChatBox extends Composite implements RequiresResize {
         @Override
         public void onFailure(Throwable caught) {
             MaterialToast.fireToast("Can't retrieve latest messages...");
-            refreshMessageTimer.schedule(Constants.MESSAGE_REFRESH_RATE * 3);
+            refreshMessageTimer.schedule(Constants.MESSAGE_REFRESH_RATE * retryMultiplier);
+            retryMultiplier++;
         }
 
         @Override
