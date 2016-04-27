@@ -36,11 +36,18 @@ dependencies {
     // Specifies the App Engine SDK to download and use.
     appengineSdk "com.google.appengine:appengine-java-sdk:$gaeVer"
 
+    // Include GWT material
+    compile "com.github.gwtmaterialdesign:gwt-material:1.5.0"
+
     // Dependencies for development. `providedCompile` dependencies
     // are not included in the output build. These are only included
     // so Eclipse can properly resolve classpaths.
-    providedCompile "com.google.gwt:gwt-user:$gwtVer"
-    providedCompile "com.google.gwt:gwt-dev:$gwtVer"
+    // providedCompile "com.google.gwt:gwt-user:$gwtVer"
+    // providedCompile "com.google.gwt:gwt-dev:$gwtVer"
+}
+
+compileJava {
+    options.incremental = true
 }
 
 gwt {
@@ -50,6 +57,10 @@ gwt {
 
     // This points to src/main/java/com/jingyu/example/Example.gwt.xml
     modules "com.jingyu.example.Example"
+
+    // Hungry hungry hippo
+    minHeapSize = "512M"
+    maxHeapSize = "1024M"
 }
 
 appengine {

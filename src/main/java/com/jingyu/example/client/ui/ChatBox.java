@@ -1,61 +1,58 @@
 package com.jingyu.example.client.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.view.client.ListDataProvider;
 import com.jingyu.example.client.MessageService;
 import com.jingyu.example.client.MessageServiceAsync;
 import com.jingyu.example.shared.Constants;
 import com.jingyu.example.shared.Message;
+import gwt.material.design.client.ui.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A self contained chat widget.
  * Created by jingyu on 4/25/16.
  */
-public class ChatBox extends Composite {
-    interface MyUiBinder extends UiBinder<FlowPanel, ChatBox> {}
+public class ChatBox extends Composite implements RequiresResize {
+    interface MyUiBinder extends UiBinder<HTMLPanel, ChatBox> {}
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private final Logger logger = Logger.getLogger("ChatBox");
+    private static DateTimeFormat DATE_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+
     private final MessageServiceAsync messageService = GWT.create(MessageService.class);
-    private final ListDataProvider<Message> dataProvider;
     private Timer refreshMessageTimer;
     private boolean inputLocked = false;
     private Date lastRefreshed;
 
     @UiField
-    Label title;
-
-    @UiField(provided = true)
-    final CellList<Message> messages;
+    MaterialNavBrand title;
 
     @UiField
     ScrollPanel scrollPanel;
 
     @UiField
-    TextBox input;
+    MaterialCollection messages;
+
+    @UiField
+    MaterialTextBox input;
 
     public ChatBox(){
-        messages = new CellList<>(new MessageCell());
         initWidget(uiBinder.createAndBindUi(this));
 
-        title.setText("Welcome to a simple messenger!");
+        title.setText("A simple messenger!");
 
-        dataProvider = new ListDataProvider<>();
-        dataProvider.addDataDisplay(messages);
+        onResize();
 
         refreshMessageTimer = new Timer(){
             public void run(){
@@ -88,8 +85,15 @@ public class ChatBox extends Composite {
     }
 
     private void addMessage(Message message) {
-        List<Message> list = dataProvider.getList();
-        list.add(message);
+        String date = DATE_FORMAT.format(message.created);
+        String content = SafeHtmlUtils.htmlEscape(message.content);
+        MaterialLabel dateLabel = new MaterialLabel(date);
+        MaterialLabel contentLabel = new MaterialLabel(content);
+        MaterialCollectionItem newMessageItem = new MaterialCollectionItem();
+        newMessageItem.add(dateLabel);
+        newMessageItem.add(contentLabel);
+
+        messages.add(newMessageItem);
     }
 
     private void refreshMessages(){
@@ -103,11 +107,19 @@ public class ChatBox extends Composite {
         }
     }
 
+    /**
+     * TODO: Stop being lazy
+     */
+    @Override
+    public void onResize() {
+        int totalHeight = Window.getClientHeight();
+        scrollPanel.setHeight(String.valueOf(totalHeight * 0.7) + "px");
+    }
+
     private class SendMessageCallback implements AsyncCallback<Void> {
         @Override
         public void onFailure(Throwable caught) {
-            // Humm... GWT doesn't support String.format()
-            logger.log(Level.WARNING, "Oh no! Message did not send successfully. Error: " + caught.getMessage());
+            MaterialToast.fireToast("Unable to send message");
             inputLocked = false;
         }
 
@@ -121,7 +133,8 @@ public class ChatBox extends Composite {
     private class RefreshMessagesCallback implements AsyncCallback<List<Message>> {
         @Override
         public void onFailure(Throwable caught) {
-            logger.warning("Woops... Can't retrieve latest messages. Error: " + caught.getMessage());
+            MaterialToast.fireToast("Can't retrieve latest messages...");
+            refreshMessageTimer.schedule(Constants.MESSAGE_REFRESH_RATE * 3);
         }
 
         @Override
@@ -131,17 +144,10 @@ public class ChatBox extends Composite {
             for (int i = messages.size() - 1; i >= 0; i--) {
                 handleNewMessage(messages.get(i));
             }
-            // Using a scheduler to prevent scrolling too early.
-            Scheduler.get().scheduleDeferred(new ScrollBottomCommand());
+            if (messages.size() > 0) {
+                scrollPanel.scrollToBottom();
+            }
             refreshMessageTimer.schedule(Constants.MESSAGE_REFRESH_RATE);
-        }
-    }
-
-    private class ScrollBottomCommand implements Scheduler.ScheduledCommand{
-        @Override
-        public void execute() {
-            messages.setVisibleRange(0, dataProvider.getList().size());
-            scrollPanel.scrollToBottom();
         }
     }
 }

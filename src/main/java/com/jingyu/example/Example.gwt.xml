@@ -6,10 +6,13 @@
     <inherits name="com.google.gwt.logging.Logging"/>
     <inherits name="com.google.gwt.i18n.I18N"/>
 
+    <!-- GWT material -->
+    <inherits name="gwt.material.design.GwtMaterialWithJQueryDebug" />
+
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
     <!-- any one of the following lines.                            -->
-    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+    <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
     <!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
     <!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
 
