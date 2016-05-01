@@ -1,0 +1,22 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:m="urn:import:gwt.material.design.client.ui"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:w="urn:import:com.jingyu.example.client.ui.widgets">
+    <g:HTMLPanel>
+        <header ui:field="header">
+            <m:MaterialNavBar backgroundColor="blue">
+                <m:MaterialNavBrand text="A simple messenger!"/>
+            </m:MaterialNavBar>
+        </header>
+        <m:MaterialContainer>
+            <m:MaterialRow>
+                <m:MaterialColumn ui:field="mainColumn" grid="s12 m10 l8" offset="m1 l2">
+                    <!-- Could also dynamically insert the ChatBox after adding ui:field
+                         to the column. -->
+                    <w:ChatBox ui:field="chatBox" />
+                </m:MaterialColumn>
+            </m:MaterialRow>
+        </m:MaterialContainer>
+    </g:HTMLPanel>
+</ui:UiBinder>

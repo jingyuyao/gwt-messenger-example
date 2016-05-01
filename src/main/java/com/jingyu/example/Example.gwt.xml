@@ -3,18 +3,15 @@
 <!-- Module name affects the location of generated Javascript files and RPC routing paths. -->
 <module rename-to="example">
     <inherits name="com.google.gwt.user.User" />
-    <inherits name="com.google.gwt.logging.Logging"/>
     <inherits name="com.google.gwt.i18n.I18N"/>
 
     <!-- GWT material -->
     <inherits name="gwt.material.design.GwtMaterialWithJQueryDebug" />
 
-    <!-- Inherit the default GWT style sheet.  You can change       -->
-    <!-- the theme of your GWT application by uncommenting          -->
-    <!-- any one of the following lines.                            -->
-    <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
-    <!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
-    <!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
+    <!-- GWT logging -->
+    <inherits name="com.google.gwt.logging.Logging"/>
+    <set-property name="gwt.logging.logLevel" value="INFO"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
 
     <entry-point class="com.jingyu.example.client.ExampleEntryPoint" />
 

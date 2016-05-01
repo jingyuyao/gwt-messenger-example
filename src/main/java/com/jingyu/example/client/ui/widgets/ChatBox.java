@@ -1,6 +1,7 @@
-package com.jingyu.example.client.ui;
+package com.jingyu.example.client.ui.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -8,7 +9,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.jingyu.example.client.MessageService;
@@ -19,25 +19,33 @@ import gwt.material.design.client.ui.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * A self contained chat widget.
  * Created by jingyu on 4/25/16.
  */
 public class ChatBox extends Composite implements RequiresResize {
-    interface MyUiBinder extends UiBinder<HTMLPanel, ChatBox> {}
+    interface MyUiBinder extends UiBinder<FlowPanel, ChatBox> {
+    }
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     private static DateTimeFormat DATE_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
 
+    private Logger logger = Logger.getLogger("ChatBox");
     private final MessageServiceAsync messageService = GWT.create(MessageService.class);
     private Timer refreshMessageTimer;
     private boolean inputLocked = false;
     private Date lastRefreshed;
     private int retryMultiplier = 2;
 
+    private FlowPanel root;
+
     @UiField
-    MaterialNavBrand title;
+    FlowPanel titlePanel;
+
+    @UiField
+    MaterialLabel title;
 
     @UiField
     ScrollPanel scrollPanel;
@@ -46,22 +54,64 @@ public class ChatBox extends Composite implements RequiresResize {
     MaterialCollection messages;
 
     @UiField
+    FlowPanel inputPanel;
+
+    @UiField
     MaterialTextBox input;
 
-    public ChatBox(){
-        initWidget(uiBinder.createAndBindUi(this));
+    public ChatBox() {
+        root = uiBinder.createAndBindUi(this);
+        initWidget(root);
 
-        title.setText("A simple messenger!");
+        // Setting UiField properties must come after initWidget()
+        title.setText("No title");
 
-        onResize();
-
-        refreshMessageTimer = new Timer(){
-            public void run(){
+        refreshMessageTimer = new Timer() {
+            public void run() {
                 refreshMessages();
             }
         };
 
         refreshMessages();
+    }
+
+    /**
+     * This method is called as the last step of a widget's rendering process.
+     * We must perform a resize at the last possible moment because we need
+     * every element to have its height **calculated** in the DOM before we can set
+     * the scroll element's size correctly.
+     * <see>http://stackoverflow.com/questions/8959643/how-to-know-when-a-widget-is-being-rendered</see>
+     */
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        // Just because GWT tells us the widget is attached to the DOM doesn't
+        // mean the widget's width and height are calculated yet. We need to wait
+        // until the browser's layout engine finishes rendering the widget before
+        // calling a resize since this widget uses percent units for its width and height.
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                onResize();
+            }
+        });
+    }
+
+    /**
+     * We must explicitly define the height of a scrolling element in order to make it work.
+     * I could not find any pure CSS way of doing so (which is dumb) so we'll us JS instead.
+     * An interesting thing to note is that there are no native ways to query the calculated
+     * margins of elements within GWT. As a workaround, I added wrappers around elements that
+     * contains margin so I could just query the height of the wrappers instead.
+     */
+    @Override
+    public void onResize() {
+        int rootHeight = root.getOffsetHeight();
+        int titlePanelHeight = titlePanel.getOffsetHeight();
+        int inputPanelHeight = inputPanel.getOffsetHeight();
+        int scrollPanelHeight = rootHeight - titlePanelHeight - inputPanelHeight;
+        logger.info(String.valueOf(scrollPanelHeight));
+        scrollPanel.setHeight(String.valueOf(scrollPanelHeight) + "px");
     }
 
     @UiHandler("input")
@@ -79,7 +129,7 @@ public class ChatBox extends Composite implements RequiresResize {
         // final so it could be used inside the callback
         final String content = input.getValue();
 
-        if (content != "") {
+        if (!content.equals("")) {
             inputLocked = true;
             messageService.addMessage(content, new SendMessageCallback());
         }
@@ -97,24 +147,15 @@ public class ChatBox extends Composite implements RequiresResize {
         messages.add(newMessageItem);
     }
 
-    private void refreshMessages(){
+    private void refreshMessages() {
         messageService.listMessages(lastRefreshed, new RefreshMessagesCallback());
     }
 
-    private void handleNewMessage(Message message){
+    private void handleNewMessage(Message message) {
         addMessage(message);
         if (lastRefreshed == null || message.created.after(lastRefreshed)) {
             lastRefreshed = message.created;
         }
-    }
-
-    /**
-     * TODO: Stop being lazy
-     */
-    @Override
-    public void onResize() {
-        int totalHeight = Window.getClientHeight();
-        scrollPanel.setHeight(String.valueOf(totalHeight * 0.8) + "px");
     }
 
     private class SendMessageCallback implements AsyncCallback<Void> {
