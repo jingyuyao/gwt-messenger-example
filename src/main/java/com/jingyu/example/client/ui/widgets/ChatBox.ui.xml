@@ -2,15 +2,15 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:m="urn:import:gwt.material.design.client.ui"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <g:FlowPanel height="100%" width="100%">
-        <g:FlowPanel ui:field="titlePanel">
-            <m:MaterialLabel ui:field="title"/>
-        </g:FlowPanel>
-        <g:ScrollPanel ui:field="scrollPanel">
-            <m:MaterialCollection ui:field="messages"/>
-        </g:ScrollPanel>
-        <g:FlowPanel ui:field="inputPanel">
-            <m:MaterialTextBox ui:field="input" placeholder="Type a message..."/>
-        </g:FlowPanel>
-    </g:FlowPanel>
+    <ui:style src="ChatBox.css"/>
+
+    <m:MaterialPanel addStyleNames="{style.root}">
+        <m:MaterialLabel ui:field="title" text="Default title" addStyleNames="{style.title}"/>
+        <m:MaterialPanel addStyleNames="{style.scroll-parent}">
+            <g:ScrollPanel ui:field="scrollPanel">
+                <m:MaterialCollection ui:field="messages"/>
+            </g:ScrollPanel>
+        </m:MaterialPanel>
+        <m:MaterialTextBox ui:field="input" placeholder="Type a message..."/>
+    </m:MaterialPanel>
 </ui:UiBinder>

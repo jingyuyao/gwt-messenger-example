@@ -1,0 +1,22 @@
+.root {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    text-align: center;
+}
+
+.main-row {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    margin: 0;
+}
+
+.main-column {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+

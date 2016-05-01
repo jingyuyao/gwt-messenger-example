@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * Created by jingyu on 4/25/16.
  */
 public class ChatBox extends Composite implements RequiresResize {
-    interface MyUiBinder extends UiBinder<FlowPanel, ChatBox> {
+    interface MyUiBinder extends UiBinder<MaterialPanel, ChatBox> {
     }
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -39,11 +39,6 @@ public class ChatBox extends Composite implements RequiresResize {
     private Date lastRefreshed;
     private int retryMultiplier = 2;
 
-    private FlowPanel root;
-
-    @UiField
-    FlowPanel titlePanel;
-
     @UiField
     MaterialLabel title;
 
@@ -54,17 +49,10 @@ public class ChatBox extends Composite implements RequiresResize {
     MaterialCollection messages;
 
     @UiField
-    FlowPanel inputPanel;
-
-    @UiField
     MaterialTextBox input;
 
     public ChatBox() {
-        root = uiBinder.createAndBindUi(this);
-        initWidget(root);
-
-        // Setting UiField properties must come after initWidget()
-        title.setText("No title");
+        initWidget(uiBinder.createAndBindUi(this));
 
         refreshMessageTimer = new Timer() {
             public void run() {
@@ -99,19 +87,16 @@ public class ChatBox extends Composite implements RequiresResize {
 
     /**
      * We must explicitly define the height of a scrolling element in order to make it work.
-     * I could not find any pure CSS way of doing so (which is dumb) so we'll us JS instead.
-     * An interesting thing to note is that there are no native ways to query the calculated
-     * margins of elements within GWT. As a workaround, I added wrappers around elements that
-     * contains margin so I could just query the height of the wrappers instead.
+     * I wrapped the ScrollPanel in a div and programmatically set its height to the parent div.
      */
     @Override
     public void onResize() {
-        int rootHeight = root.getOffsetHeight();
-        int titlePanelHeight = titlePanel.getOffsetHeight();
-        int inputPanelHeight = inputPanel.getOffsetHeight();
-        int scrollPanelHeight = rootHeight - titlePanelHeight - inputPanelHeight;
-        logger.info(String.valueOf(scrollPanelHeight));
-        scrollPanel.setHeight(String.valueOf(scrollPanelHeight) + "px");
+        // Hide the ScrollPanel so the parent height resets.
+        scrollPanel.setVisible(false);
+        int parentHeight = scrollPanel.getParent().getOffsetHeight();
+        logger.info("ChatBox parent: " + String.valueOf(parentHeight));
+        scrollPanel.setHeight(String.valueOf(parentHeight) + "px");
+        scrollPanel.setVisible(true);
     }
 
     @UiHandler("input")
