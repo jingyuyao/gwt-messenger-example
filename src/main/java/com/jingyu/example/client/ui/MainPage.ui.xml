@@ -10,7 +10,7 @@
         </m:MaterialNavBar>
         <!-- Not using MaterialMain because it adds bottom padding when screen is small. (WHY!!?) -->
         <m:MaterialRow addStyleNames="{style.main-row}">
-            <m:MaterialColumn ui:field="mainColumn" grid="s12 m10 l8" offset="m1 l2" addStyleNames="{style.main-column}">
+            <m:MaterialColumn grid="s12 m10 l8" offset="m1 l2" addStyleNames="{style.main-column}">
                 <!-- Could also dynamically insert the ChatBox after adding ui:field
                      to the column. -->
                 <w:ChatBox ui:field="chatBox" />
