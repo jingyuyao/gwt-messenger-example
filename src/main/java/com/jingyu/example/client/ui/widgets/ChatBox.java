@@ -38,9 +38,13 @@ public class ChatBox extends Composite implements RequiresResize {
     private boolean inputLocked = false;
     private Date lastRefreshed;
     private int retryMultiplier = 2;
+    private boolean firstResponse = false;
 
     @UiField
     MaterialLabel title;
+
+    @UiField
+    MaterialPreLoader loader;
 
     @UiField
     ScrollPanel scrollPanel;
@@ -167,6 +171,10 @@ public class ChatBox extends Composite implements RequiresResize {
 
         @Override
         public void onSuccess(List<Message> messages) {
+            if (!firstResponse){
+                firstResponse = true;
+                loader.setVisible(false);
+            }
             // Returned messages are sorted by created descending and we
             // want to display the latest message on the bottom.
             for (int i = messages.size() - 1; i >= 0; i--) {

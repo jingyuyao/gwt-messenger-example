@@ -1,6 +1,6 @@
 .root {
     display: flex;
-    flex-grow: 1;
+    flex: 1 1 auto;
     flex-direction: column;
 }
 
@@ -10,5 +10,12 @@
 }
 
 .scroll-parent {
-    flex-grow: 1;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.loader {
+    align-self: center;
+    flex: 1 1 auto;
 }

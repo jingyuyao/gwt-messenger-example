@@ -7,6 +7,9 @@
     <m:MaterialPanel addStyleNames="{style.root}">
         <m:MaterialLabel ui:field="title" text="Default title" addStyleNames="{style.title}"/>
         <m:MaterialPanel addStyleNames="{style.scroll-parent}">
+            <m:MaterialPreLoader ui:field="loader" size="BIG" addStyleNames="{style.loader}">
+                <m:MaterialSpinner color="blue-only"/>
+            </m:MaterialPreLoader>
             <g:ScrollPanel ui:field="scrollPanel">
                 <m:MaterialCollection ui:field="messages"/>
             </g:ScrollPanel>
