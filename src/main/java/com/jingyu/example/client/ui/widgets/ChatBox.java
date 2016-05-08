@@ -44,7 +44,7 @@ public class ChatBox extends Composite implements RequiresResize {
     MaterialLabel title;
 
     @UiField
-    MaterialPreLoader loader;
+    MaterialProgress loader;
 
     @UiField
     ScrollPanel scrollPanel;

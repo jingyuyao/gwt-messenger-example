@@ -10,12 +10,6 @@
 }
 
 .scroll-parent {
-    display: flex;
     flex: 1 1 auto;
-    flex-direction: column;
 }
 
-.loader {
-    align-self: center;
-    flex: 1 1 auto;
-}
